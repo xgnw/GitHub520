@@ -11,10 +11,10 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: [3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,16 +24,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: update readme
-      env:
-        gitee_token: ${{ secrets.GITEE_TOKEN }}
-        gitee_gist_id: ${{ secrets.GITEE_GIST_ID }}
-        gitee_gist_file_name: ${{ secrets.GITEE_GIST_FILE_NAME }}
+        if [ -f actions_requirements.txt ]; then pip install -r actions_requirements.txt; fi
+    - name: run script
       run: |
         # fetch new ip content and update readme file
-        python fetch_ips.py
+        python update_ips.py
     - name: commit
       id: commit
       run: |
